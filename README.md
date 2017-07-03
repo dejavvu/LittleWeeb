@@ -8,11 +8,11 @@ Be aware that this application is still in development and might still have some
 [YouTube](https://www.youtube.com/watch?v=yJjL9wQEEEQ)
 
 # Screenshots
-[![Image of Yaktocat](https://i.imgur.com/Pq749o9h.png)](https://i.imgur.com/Pq749o9.png)
-[![Image of Yaktocat](https://i.imgur.com/WMlJT8Qh.png)](https://i.imgur.com/WMlJT8Q.png)
-[![Image of Yaktocat](https://i.imgur.com/x2FnbOAh.png)](https://i.imgur.com/x2FnbOA.png)
-[![Image of Yaktocat](https://i.imgur.com/K16Oqnnh.png)](https://i.imgur.com/K16Oqnn.png)
-[![Image of Yaktocat](https://i.imgur.com/nUrCY4Vh.png)](https://i.imgur.com/nUrCY4V.png)
+[![Image of Yaktocat](https://i.imgur.com/Pq749o9l.png)](https://i.imgur.com/Pq749o9.png)
+[![Image of Yaktocat](https://i.imgur.com/WMlJT8Ql.png)](https://i.imgur.com/WMlJT8Q.png)
+[![Image of Yaktocat](https://i.imgur.com/x2FnbOAl.png)](https://i.imgur.com/x2FnbOA.png)
+[![Image of Yaktocat](https://i.imgur.com/FHnRpTbl.png)](https://i.imgur.com/FHnRpTb.png)
+[![Image of Yaktocat](https://i.imgur.com/nUrCY4Vl.png)](https://i.imgur.com/nUrCY4V.png)
 
 
 # New Features!
