@@ -1,0 +1,220 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="SemanticUI/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.css">
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"> </script>
+    <script src="SemanticUI/semantic.min.js"></script>	
+    <script src="js/niblDataRetreiver.js"></script>
+    <script src="js/server.js"></script>
+    <script src="js/controller.js"></script>
+    <title> Little Weeb </title>
+  </head>
+  <body onbeforeunload="return closeBackend()" style="min-width:1024px; background-image: url('http://www.wallpaperbetter.com/wallpaper/311/384/885/anime-white-doughnut-bakemonogatari-hd-1080P-wallpaper.jpg') !important;  background-repeat: no-repeat;   background-attachment: fixed; background-size: contain;">
+    <div class="ui active centered inline inverted dimmer" id="initialLoading" >
+      <div class="ui text loader">Waiting for final connection to the IRC server!</div>
+    </div>
+    <div class="ui grid">
+      <div class="four wide column" style="background-color: rgba(0,0,0,0)">
+        <div class="ui grey secondary vertical pointing menu fixed" style="height: 100%">
+          <div class="ui horizontal divider">
+            Little Weeb
+          </div>
+          <a class="item active" onclick="showView('latest')">
+          <i class="add to calendar icon "></i> Latest Added
+          </a>
+          <a class="item active" onclick="showView('search')">
+          <i class="search icon "></i> Search
+          </a>
+          <a class="item" onclick="showView('bots')">
+          <i class="disk outline icon "></i> Bots
+          </a>
+          <a class="item" onclick="showView('downloads')">
+          <i class="download icon "></i> Downloads
+          </a>
+          <a class="item" onclick="showView('settings')">
+          <i class="settings icon "></i> Settings
+          </a>
+          <a class="item" onclick="showView('about')">
+          <i class="info icon "></i> About
+          </a>
+        </div>
+      </div>
+      <div class="ten wide column container" id="views" style="display:hide; background-color: rgba(0,0,0,0)">
+        <div class="row">
+          <div class="latest View" style="display:hide; height: 100%;">
+            <div class="ui horizontal divider"> LATEST PACKS </div>
+            <div class="row">
+              <p>
+              <div class="ui selection dropdown" style="width: 100%;">
+                <input type="hidden" name="botlatest"  style="width: 100%;">
+                <i class="dropdown icon"></i>
+                <div class="default text">All Bots</div>
+                <div class="menu botlist" style="min-width: 100%;">
+                </div>
+              </div>
+              </p>
+            </div>
+            <div class="ui divider"></div>
+            <div class="ui active centered inline inverted dimmer" style="display:none;" id="latestLoading" >
+              <div class="ui text loader">Loading</div>
+            </div>
+            <div class="row">
+              <div class="row multipleselected" id="multipleselected" style="display:none;">
+                <p>							
+                <center> <button class="ui primary button" style="width: 100%" onclick="appendToDownloadList()"> Append selected to download list. </button></center>
+                </p>
+                <br>
+              </div>
+              <div class="ui styled accordion" id="latestpacks" style=" width: 100%; "></div>
+            </div>
+          </div>
+          <div class="search View" style="display:none; height:100%;">
+            <div class="row" style="width: 100%;">
+              <div class="ui horizontal divider">SEARCH</div>
+              <div class="ui selection dropdown" style="width: 18%;"  onclick="botForLatestClicked()">
+                <input type="hidden" name="botsearch"  style="width: 18%;">
+                <i class="dropdown icon"></i>
+                <div class="default text">All Bots</div>
+                <div class="menu botlist" style="min-width: 18%;">
+                </div>
+              </div>
+              <div class="ui input" style="width: 80%;">
+                <div class="ui icon input" style="width: 100%;">
+                  <input id="searchInput" class="prompt" type="text" placeholder="Search Anime">
+                  <i class="search icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="ui horizontal divider"> Results </div>
+            <div class="row multipleselected" id="multipleselected" style="display:none;">
+              <p>							
+              <center> <button class="ui primary button" style="width: 100%" onclick="appendToDownloadList()"> Append selected to download list. </button></center>
+              </p>
+              <br>
+            </div>
+            <div class="row" id="results" style="display:none;">
+              <div class="ui styled accordion" id="searchResults" style="width: 100%; ">
+              </div>
+            </div>
+            <div class="row" id="notabletofind" style="display:none;">
+              <center>
+                <h2> We couldn't find what you are looking for... </h2>
+              </center>
+            </div>
+            <div class="ui active centered inline inverted dimmer" id="searchLoading" style="display:none;">
+              <div class="ui text loader">Loading</div>
+            </div>
+          </div>
+          <div class="bots View" style="display:none;">
+            <div class="ui horizontal divider"> BOTS </div>
+            <div class="ui active centered inline inverted dimmer" id="botsLoading" style="display:none;">
+              <div class="ui text loader">Loading</div>
+            </div>
+            <div class="ui styled accordion" id="bots" style="width: 100%; ">
+            </div>
+          </div>
+          <div class="downloads View" style="display:none;">
+            <div class="ui horizontal divider"> DOWNLOADS </div>
+            <div class="row">
+              <table class="ui very basic table" style="width: 100%; background-color: white;">
+                <thead>
+                  <tr>
+                    <th style="width: 10%;">File</th>
+                    <th style="width: 10%;">Status</th>
+                    <th style="width: 40%;">Progress</th>
+                    <th style="width: 40%;">Options</th>
+                  </tr>
+                </thead>
+                <tbody id="listWithDownloads">
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="settings View" style="display:none;">
+            <div class="ui horizontal divider"> SETTINGS </div>
+            <div class="ui form">
+              <div class="field">
+                <label>Custom Server - Where this UI is connected to.</label>
+                <input style="width: 90%;" id="customServer" type="text" name="customServer" placeholder="Default: Local - Example: x.x.x.x"> <button style="width: 8%;" class="ui primary button" onclick="setCustomServer()">Set</button>
+              </div>
+              <div class="field">
+                <label>Download Location</label>
+                <input style="width: 90%;" id="downloadLocation" type="text" name="downloadLocation" placeholder="Default: location of application."> <button style="width: 8%;" class="ui primary button" onclick="openFileDialog()">Select</button>
+              </div>
+              <div class="field">
+                <label>Custom Channel(s) - Seperate with ','</label>
+                <input style="width: 90%;" id="customServer" type="text" name="customChannels" placeholder="Default: horriblesubs,nibl,news"> <button style="width: 8%;" class="ui primary button" onclick="setChannels()">Set</button>
+              </div>
+            </div>
+          </div>
+          <div class="about View" style="display:none;">
+            <div class="ui horizontal divider"> ABOUT </div>
+            <div class="row">
+              <p>
+                <center> <h3>Welcome to LittleWeeb </h3></center>
+              </p>
+              <p>
+                LittleWeeb is made with the idea of simplifying the way you download Anime through XDCC. Normally, you'd download anime through XDCC like <a href="https://www.youtube.com/watch?v=0y3ZPGvHfHQ" target="_blank">this.</a>. That's a long as tutorial isn't it (Though a good one)? </br>
+                Well, my lazy ass couldn't stand the way this had to be done. As I knew, just a few simple things combined together, would automate the whole progress :D.
+              </p>
+              <p>
+                Anyway, LittleWeeb wouldn't have happend if one of the biggest XDCC search site didn't have an API that I could use. And thanks to the developer who works on the API I could actually make LittleWeeb a reality. The site that I am talking about? <a href="http://nibl.co.uk" target="_blank">NIBL</a>. Again, I am very gratefull for the use of their api :D, making my live, easier.
+              </p>
+              <p>
+                Ofcourse, this project is opensource, located here: <a href="https://github.com/EldinZenderink/LittleWeeb"> Github </a>. </br>
+                For the latest version, look here: <a href="https://github.com/EldinZenderink/LittleWeeb/releases"> Newest Releases</a>.
+              </p>
+              <p>
+                Thank you for using LittleWeeb, do try to support the anime creators by actually buying the stuff, or subscribe to crunchyroll or similar services!
+              </p>
+            </div>
+          </div>
+          <div class="loading View" style="display:none;">
+            <div class="ui active centered inline inverted dimmer">
+              <div class="ui text loader">Loading</div>
+            </div>
+          </div>
+          <div class="bot View" style="display:none;">
+            <div class="ui horizontal divider" id="botName"></div>
+            <div class="ui active centered inline inverted dimmer" id="botLoading" >
+              <div class="ui text loader">Loading</div>
+            </div>
+            <div class="row multipleselected" id="multipleselected" style="display:none;">
+              <p>							
+              <center> <button class="ui primary button" style="width: 100%" onclick="appendToDownloadList()"> Append selected to download list. </button></center>
+              </p>
+              <br>
+            </div>
+            <div class="ui styled accordion" id="packs" style="width: 100%; ">
+            </div>
+            <p>
+            <center>
+              <div id="pages" class="ui pagination menu">
+                <a class="active item">
+                1
+                </a>
+              </div>
+            </center>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    $('.ui.menu').on('click', '.item', function() {
+      if(!$(this).hasClass('dropdown')) {
+        $(this).addClass('active').siblings('.item').removeClass('active');
+      }
+    });
+    $('.ui.accordion').accordion();
+    $('.ui.dropdown')
+      .dropdown()
+    ;
+    
+  </script>
+</html>

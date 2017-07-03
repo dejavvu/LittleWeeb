@@ -1,0 +1,15 @@
+C:\Users\Eldin-Desktop\documents\visual studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\LittleWeebIRC.exe.config
+C:\Users\Eldin-Desktop\documents\visual studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\LittleWeebIRC.exe
+C:\Users\Eldin-Desktop\documents\visual studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\LittleWeebIRC.pdb
+C:\Users\Eldin-Desktop\documents\visual studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Eldin-Desktop\documents\visual studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\SimpleIRCLib.dll
+C:\Users\Eldin-Desktop\documents\visual studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Eldin-Desktop\documents\visual studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\obj\Debug\LittleWeebIRC.exe
+C:\Users\Eldin-Desktop\documents\visual studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\obj\Debug\LittleWeebIRC.pdb
+C:\Users\Eldin-Desktop\documents\visual studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\SimpleIRCLib.pdb
+C:\Users\Eldin-Desktop\Documents\Visual Studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\obj\Debug\LittleWeebIRC.csprojResolveAssemblyReference.cache
+C:\Users\Eldin-Desktop\Documents\Visual Studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Eldin-Desktop\Documents\Visual Studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll
+C:\Users\Eldin-Desktop\Documents\Visual Studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\Microsoft.WindowsAPICodePack.Sensors.dll
+C:\Users\Eldin-Desktop\Documents\Visual Studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll
+C:\Users\Eldin-Desktop\Documents\Visual Studio 2017\Projects\LittleWeebIRC\LittleWeebIRC\bin\Debug\Microsoft.WindowsAPICodePack.ShellExtensions.dll
