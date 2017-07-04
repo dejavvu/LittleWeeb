@@ -14,7 +14,6 @@
     <title> Little Weeb </title>
   </head>
   <body onbeforeunload="return closeBackend()" style="min-width:1024px; background-image: url('http://www.wallpaperbetter.com/wallpaper/311/384/885/anime-white-doughnut-bakemonogatari-hd-1080P-wallpaper.jpg') !important;  background-repeat: no-repeat;   background-attachment: fixed; background-size: contain;">
-    <div class="ui active centered inline inverted dimmer" id="initialLoading" >
       <div class="ui text loader">Waiting for final connection to the IRC server!</div>
     </div>
     <div class="ui grid">
@@ -23,10 +22,13 @@
           <div class="ui horizontal divider">
             Little Weeb
           </div>
-          <a class="item active" onclick="showView('latest')">
-          <i class="add to calendar icon "></i> Latest Added
+          <a class="item active" onclick="showView('currentlyAiring')">
+          <i class="add to calendar icon "></i> Currently Airing
           </a>
-          <a class="item active" onclick="showView('search')">
+          <a class="item" onclick="showView('latestPack')">
+          <i class="add to calendar icon "></i> Latest XDCC Pack
+          </a>
+          <a class="item" onclick="showView('search')">
           <i class="search icon "></i> Search
           </a>
           <a class="item" onclick="showView('bots')">
@@ -43,9 +45,59 @@
           </a>
         </div>
       </div>
-      <div class="ten wide column container" id="views" style="display:hide; background-color: rgba(0,0,0,0)">
         <div class="row">
-          <div class="latest View" style="display:hide; height: 100%;">
+          <div class="currentlyAiring View" style="display:show; height: 100%;">
+            <div class="ui horizontal divider"> Currently Airing </div>
+            <div class="ui active centered inline inverted dimmer" style="display:none;" id="currentlyAiringLoading" >
+              <div class="ui text loader">Loading</div>
+            </div>
+            <div class="row">
+              <div class="row multipleselected" id="multipleselected" style="display:none;">
+                <p>             
+                <center> <button class="ui primary button" style="width: 100%" onclick="appendToDownloadList()"> Append selected to download list. </button></center>
+                </p>
+                <br>
+              </div>
+              <div class="ui items" id="currentlyAiringAnimes"></div>
+            </div>
+          </div>
+          <div class="anime View" style="display:none; height: 100%;">
+            <div class="ui horizontal divider" id="animeTitle">ANIME TITLE</div>
+            <div class="ui active centered inline inverted dimmer" style="display:none;" id="animeLoading" >
+              <div class="ui text loader">Loading</div>
+            </div>
+            <div class="row">
+               <div class="ui selection dropdown" style="width: 10%;">
+                <input type="hidden" name="botanime"  style="width: 10%;">
+                <i class="dropdown icon"></i>
+                <div class="default text">All Bots</div>
+                <div class="menu botlist" style="min-width: 10%;" onclick="setTimeout(function(){botForAnimeClicked();}, 100)">
+                </div>
+              </div>
+              <div class="ui selection dropdown" style="width: 10%;"  >
+                <input type="hidden" name="resolutionAnime"  style="width: 10%;">
+                <i class="dropdown icon"></i>
+                <div class="default text">All Resolutions</div>
+                <div class="menu" style="min-width: 10%;" onclick="setTimeout(function(){resolutionAnimeClicked();}, 100)">                
+                  <div class="item active" data-value="none">All Resolutions</div>
+                  <div class="item" data-value="480" >480p</div>
+                  <div class="item" data-value="720" >720p</div>
+                  <div class="item" data-value="1080" >1080p</div>
+                </div>
+              </div>
+            </div>
+            <div class="divider ui"></div>
+            <div class="row">
+              <div class="row multipleselected" id="multipleselected" style="display:none;">
+                <p>             
+                <center> <button class="ui primary button" style="width: 100%" onclick="appendToDownloadList()"> Append selected to download list. </button></center>
+                </p>
+                <br>
+              </div>
+              <div class="ui styled accordion" id="animeEpisodes" style=" width: 100%; "></div>
+            </div>
+          </div>
+          <div class="latestPack View" style="display:none; height: 100%;">
             <div class="ui horizontal divider"> LATEST PACKS </div>
             <div class="row">
               <p>
@@ -75,14 +127,14 @@
           <div class="search View" style="display:none; height:100%;">
             <div class="row" style="width: 100%;">
               <div class="ui horizontal divider">SEARCH</div>
-              <div class="ui selection dropdown" style="width: 18%;"  onclick="botForLatestClicked()">
-                <input type="hidden" name="botsearch"  style="width: 18%;">
+              <div class="ui selection dropdown" style="width: 10%;"  onclick="botForLatestClicked()">
+                <input type="hidden" name="botsearch"  style="width: 10%;">
                 <i class="dropdown icon"></i>
                 <div class="default text">All Bots</div>
-                <div class="menu botlist" style="min-width: 18%;">
+                <div class="menu botlist" style="min-width: 10%;">
                 </div>
               </div>
-              <div class="ui input" style="width: 80%;">
+              <div class="ui input" style="width: 70%;">
                 <div class="ui icon input" style="width: 100%;">
                   <input id="searchInput" class="prompt" type="text" placeholder="Search Anime">
                   <i class="search icon"></i>

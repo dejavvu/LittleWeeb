@@ -54,9 +54,187 @@ function showView(view) {
  });
  console.log("clearing selected list");
  selectedPacks = [];
+ $('.multipleselected').fadeOut();
  window.location.hash = view;
 }
 
+//currently airing view
+
+$(document).ready(function() {
+  getCurrentlyAiring(showCurrentlyAiring);
+});
+var currentlyAiring;
+var currentlyAiringBackup;
+function showCurrentlyAiring(data){
+  var html = "";
+  currentlyAiring = data;
+  $.each(data, function(key, val){
+    console.log(val.title_english);
+    html = html + '<div class="item" onclick="showAnime(\'' + val.id + '\')"><div class="ui tiny image"> <img src="' + val.image_url_med + '" /> </div><div class="middle aligned content"><a class="header">' + val.title_english + '</a></div></div> <div class="ui divider"></div>';
+  });
+
+  $('#currentlyAiringAnimes').html(html);
+}
+
+
+
+var animeThatPossiblyIsTheSameAsCurrentlyAiring = [];
+var botSelected = -1;
+var resolution = "none";
+var currentAnimeID = "0";
+
+function showAnime(animeID){
+  animeThatPossiblyIsTheSameAsCurrentlyAiring = [];
+  currentAnimeID = animeID;
+  resolution = $('input[name$=resolutionAnime]').val();
+  botSelected = $('input[name$=botanime]').val();
+
+
+  var animeData;
+  var indexOfAnime = 0;
+  var indexC = 0;
+  $.each(currentlyAiring, function(key, val){
+    if(val.id == animeID){
+      indexOfAnime = indexC;
+    }
+    indexC++;
+  });
+  console.log(currentlyAiring[indexOfAnime]);
+  var synonymsarray = currentlyAiring[indexOfAnime].synonyms;
+  if(synonymsarray[0] == ""){
+    synonymsarray.splice(0, 1);
+  }
+  $.each(synonymsarray, function(key, val){
+      console.log("searching for: " + stripName(val));
+      if(val != ""){
+        searchForAnime(stripName(val), -1, function(data){
+          if(data.length > 0){
+            $.each(data, function(key1, value){
+              if(compareNames(val, value.name) > 50){
+                var exists = false;
+                $.each(animeThatPossiblyIsTheSameAsCurrentlyAiring, function(key2, value1){                   
+                    if(value1.id == value.id && value1.botId == value.botId && value1.name == value.name && value.episodeNumber > -1){
+                      exists = true;
+                    }
+                });
+                if(!exists){
+                  if((parseInt(botSelected) == -1 || botSelected === undefined || botSelected == "") && (resolution == "none" || resolution === undefined || resolution == "")){
+                    animeThatPossiblyIsTheSameAsCurrentlyAiring.push(value);
+                  } else if(parseInt(botSelected) > -1 && (resolution == "none" || resolution === undefined || resolution == "")){
+                    if(value.botId == botSelected){
+                      animeThatPossiblyIsTheSameAsCurrentlyAiring.push(value);
+                    }
+                  } else if((parseInt(botSelected) == -1 || botSelected === undefined || botSelected == "")  && resolution != "none"){
+                    if(value.name.indexOf(resolution) > -1){
+                      animeThatPossiblyIsTheSameAsCurrentlyAiring.push(value);
+                    }
+                  } else {
+                    if(value.name.indexOf(resolution) > -1 && value.botId == botSelected){
+                      animeThatPossiblyIsTheSameAsCurrentlyAiring.push(value);
+                    }
+                  }
+                }
+              }
+            });
+           }
+        });        
+      }
+  });
+
+  var newLengthOfArray = -1;
+  var currentLengthOfArray = animeThatPossiblyIsTheSameAsCurrentlyAiring.length;
+  var waitInt = setInterval(function(){
+    console.log(animeThatPossiblyIsTheSameAsCurrentlyAiring.length);
+    if(animeThatPossiblyIsTheSameAsCurrentlyAiring.Length == newLengthOfArray && animeThatPossiblyIsTheSameAsCurrentlyAiring.Length != 0){
+      console.log(animeThatPossiblyIsTheSameAsCurrentlyAiring.sort((a, b) => b.episodeNumber - a.episodeNumber));
+      
+      var html = "";
+      $.each(animeThatPossiblyIsTheSameAsCurrentlyAiring,function(key, value){
+          var botName = getBotNamePerID(value.botId);
+          html = html + generateHtmlForPackList(key, value.number, botName, value.name);
+      });
+      $('#animeEpisodes').html(html);
+      $('#animeTitle').html(currentlyAiring[indexOfAnime].title_english);
+      showView('anime');
+      clearInterval(waitInt);
+    }
+    newLengthOfArray = animeThatPossiblyIsTheSameAsCurrentlyAiring.Length;
+  }, 500);
+}
+
+function resolutionAnimeClicked(){  
+  console.log(currentAnimeID);
+
+  resolution = $('input[name$=resolutionAnime]').val();
+  botSelected = $('input[name$=botanime]').val();
+  console.log(resolution);
+  var localarray = [];
+
+  $.each(animeThatPossiblyIsTheSameAsCurrentlyAiring, function(key, value){
+      if((parseInt(botSelected) == -1 || botSelected === undefined || botSelected == "") && (resolution == "none" || resolution === undefined || resolution == "")){
+        localarray.push(value);
+      } else if(parseInt(botSelected) > -1 && (resolution == "none" || resolution === undefined || resolution == "")){
+        if(value.botId == botSelected){
+          localarray.push(value);
+        }
+      } else if((parseInt(botSelected) == -1 || botSelected === undefined || botSelected == "")  && resolution != "none"){
+        if(value.name.indexOf(resolution) > -1){
+          localarray.push(value);
+        }
+      } else {
+        if(value.name.indexOf(resolution) > -1 && value.botId == botSelected){
+          localarray.push(value);
+        }
+      }
+  });
+
+  var html = "";
+  $.each(localarray, function(key, value){
+      var botName = getBotNamePerID(value.botId);
+      html = html + generateHtmlForPackList(key, value.number, botName, value.name);
+  });
+  $('#animeEpisodes').html(html);
+
+
+  
+}
+
+function botForAnimeClicked(){
+   
+  resolution = $('input[name$=resolutionAnime]').val();
+  botSelected = $('input[name$=botanime]').val();
+  console.log(botSelected);
+  var localarray = [];
+
+  $.each(animeThatPossiblyIsTheSameAsCurrentlyAiring, function(key, value){
+      if((parseInt(botSelected) == -1 || botSelected === undefined || botSelected == "") && (resolution == "none" || resolution === undefined || resolution == "")){
+        localarray.push(value);
+      } else if(parseInt(botSelected) > -1 && (resolution == "none" || resolution === undefined || resolution == "")){
+        if(value.botId == botSelected){
+          localarray.push(value);
+        }
+      } else if((parseInt(botSelected) == -1 || botSelected === undefined || botSelected == "")  && resolution != "none"){
+        if(value.name.indexOf(resolution) > -1){
+          localarray.push(value);
+        }
+      } else {
+        if(value.name.indexOf(resolution) > -1 && value.botId == botSelected){
+          localarray.push(value);
+        }
+      }
+  });
+
+  var html = "";
+  $.each(localarray, function(key, value){
+      var botName = getBotNamePerID(value.botId);
+      html = html + generateHtmlForPackList(key, value.number, botName, value.name);
+  });
+  $('#animeEpisodes').html(html);
+}
+
+
+
+//latest pack view 
 getLatestPacks($('input[name$=botlatest]').val(), showLatest);
 var latestInterval = setInterval(function() {
  getLatestPacks($('input[name$=botlatest]').val(), showLatest);
@@ -414,6 +592,198 @@ function aCheckBoxChecked(pack, bot, filename, id) {
  }
 
  console.log(selectedPacks);
+}
+
+//returns a value in percentage that describes how closely two strings match.
+function compareNames(str1, str2){
+  str1 = stripName(str1);
+  str2 = stripName(str2);
+  var str1L = str1.length;
+  var str2L = str2.length;
+  var equal = 0;
+  if(str1L > str2L){
+    for(var x = 0; x < str2L; x++){
+      var charstr1 = str1.charAt(x);
+      var charstr2 = str2.charAt(x);
+      if(charstr1 == charstr2){
+        equal++;
+      } 
+    }
+
+    var oneprocent = str1L / 100;
+    var percentageEqual = equal / oneprocent;
+    return percentageEqual;
+  } else {
+    for(var x = 0; x < str1L; x++){
+      var charstr1 = str1.charAt(x);
+      var charstr2 = str2.charAt(x);
+      if(charstr1 == charstr2){
+        equal++;
+      } 
+    }
+
+    var oneprocent = str2L / 100;
+    var percentageEqual = equal / oneprocent;
+    return percentageEqual;
+  }
+
+
+
+}
+
+function stripName(input){
+
+  try{
+    if(input.indexOf('.') > -1){
+        input = input.split('.')[0];
+    }
+  } catch(e){
+
+  }
+  
+  try{
+    while(input.indexOf('[') > -1){ 
+      if (input.indexOf('[') > -1)
+      {
+          if (input.indexOf(']') > -1)
+          {
+              input = input.split('[')[0] + input.split(']')[1];
+          } else {
+              input = input.split('[')[0] + input.split('[')[1]; 
+          }
+      }
+    }
+  } catch(e){
+
+  }
+  try{
+    while(input.indexOf('(') > -1){
+      if (input.indexOf('(') > -1)
+      {
+          if (input.indexOf(')') > -1)
+          {
+              input = input.split('(')[0] + input.split(')')[1];
+          } else {
+              input = input.split('(')[0] + input.split('(')[1];
+          }
+      }
+    }
+  } catch (e){}
+  try{
+    if (input.indexOf("S0") > -1)
+    {
+        try
+        {
+            input = input.split("S0")[0] + input.split("S0")[1].substring(2);
+
+        } catch(e)
+        {
+            try
+            {
+                input = input.split("S0")[0] + input.split("S0")[1].substring(1);
+
+            }
+            catch(e)
+            {
+                input = input.split("S0")[0] + input.split("S0")[1];
+            }
+        } 
+    }
+  } catch (e){}
+  try{
+    if (input.indexOf("E0") > -1)
+    {
+        try
+        {
+
+            input = input.split("E0")[0] + input.split("E0")[1].substring(2);
+        } catch(e)
+        {
+            try
+            {
+
+                input = input.split("E0")[0] + input.split("E0")[1].substring(1);
+            }
+            catch(e)
+            {
+                input = input.split("E0")[0] + input.split("E0")[1];
+            }
+        }
+    }
+  } catch (e){}
+  try{
+    if (input.indexOf("0") > -1)
+    {
+        try
+        {
+            input = input.split("0")[0] + input.split("0")[1].substring(2);
+
+        } catch(e)
+        {
+            try
+            {
+                input = input.split("0")[0] + input.split("0")[1].substring(1);
+
+            }
+            catch(e)
+            {
+                input = input.split("0")[0] + input.split("0")[1];
+            }
+        } 
+    }
+  } catch (e){}
+  try{
+    if (input.indexOf("1080") > -1)
+    {
+        input = input.split("1080")[0] + input.split("1080")[1].substring(1);
+    }
+  } catch (e){}
+  try{
+    if (input.indexOf("720") > -1)
+    {
+        input = input.split("720")[0] + input.split("720")[1].substring(1);
+    }
+  } catch (e){}
+  try{
+    if (input.indexOf("480") > -1)
+    {
+        input = input.split("480")[0] + input.split("480")[1].substring(1);
+    }
+  } catch (e){}
+  try{
+    if (input.indexOf("3D") > -1)
+    {
+        input = input.split("3D")[0] + input.split("3D")[1];
+    }
+  } catch (e){}
+  try{
+    if (input.indexOf("BD") > -1)
+    {
+        input = input.split("BD")[0] + input.split("BD")[1];
+    }
+  } catch (e){}
+  try{
+
+  var numberInString = parseInt(input.replace( /^\D+/g, ''));
+  while(numberInString > 9){
+    numberInString = parseInt(input.replace( /^\D+/g, ''));
+    if(numberInString > 9){
+      if (input.indexOf(numberInString) > -1)
+      {
+          input = input.split(numberInString)[0] + input.split(numberInString)[1];
+      }
+    }
+  }
+  } catch (e){}
+  try{
+  
+
+    input = input.replace(/[^\w\s]/gi, ' ').toLowerCase();
+    input = input.split('_').join(' ').trim();
+    input = input.replace(/ +(?= )/g,'');
+  } catch (e){}
+  return input;
+
 }
 
 $('.dropdown')
