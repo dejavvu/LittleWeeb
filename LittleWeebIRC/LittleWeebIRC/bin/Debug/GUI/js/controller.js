@@ -394,24 +394,24 @@ function appendToDownloadList() {
   console.log(selectedPacks);
  var i = 0;
  var length = selectedPacks.length;
+ var sendRequestString = ""
  var thisInterval = setInterval(function() {
-  try{
     if (i < length) {
      var val = selectedPacks[i];
-     sendDownloadRequest(val.packid, val.botname, val.file, false);
+     var id = generateId(val.packid, val.botname);
+     appendToDownloads(id, val.file);
+     sendRequestString = sendRequestString + "," + id + ":" + val.packid + ":" + val.botname;
     } else {
 
+     sendRequestString = "AddToDownloads:" + sendRequestString;
      notifyMe("Added " + selectedPacks.length + " files to Download!");
      console.log("clearing selected packs");
      selectedPacks = [];
+     sendMessage(sendRequestString);
      clearInterval(thisInterval);
 
     }
     i++;
-  } catch (e){
-    notifyMe(" Could not add files to download list :(", error);
-     clearInterval(thisInterval);
-  }
   
  }, 100);
 

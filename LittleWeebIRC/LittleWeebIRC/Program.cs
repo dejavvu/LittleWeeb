@@ -109,16 +109,45 @@ namespace LittleWeebIRC
             }
             if (msg.Contains("AddToDownloads"))
             {
-                string[] data = msg.Split(':');
-                string dlId = data[1];
-                string dlPack = data[2];
-                string dlBot = data[3];
-                Console.WriteLine("ADDING TO DOWLOADS: " + dlId + " /msg " + dlBot + " xdcc send #" + dlPack);
-                dlData d = new dlData();
-                d.dlId = dlId;
-                d.dlBot = dlBot;
-                d.dlPack = dlPack;
-                downloadList.Add(d);
+                Console.WriteLine("DOWNLOAD REQUEST:" + msg);
+                if (msg.Contains(","))
+                {
+                    string[] bulkDownloads = msg.Split(',');
+                    foreach(string download in bulkDownloads)
+                    {
+                        string[] data = download.Split(':');
+                        try
+                        {
+                            string dlId = data[0];
+                            string dlPack = data[1];
+                            string dlBot = data[2];
+                            Console.WriteLine("ADDING TO DOWLOADS: " + dlId + " /msg " + dlBot + " xdcc send #" + dlPack);
+                            dlData d = new dlData();
+                            d.dlId = dlId;
+                            d.dlBot = dlBot;
+                            d.dlPack = dlPack;
+                            downloadList.Add(d);
+                        }
+                        catch
+                        {
+
+                        }
+
+                    }
+                } else
+                {
+
+                    string[] data = msg.Split(':');
+                    string dlId = data[1];
+                    string dlPack = data[2];
+                    string dlBot = data[3];
+                    Console.WriteLine("ADDING TO DOWLOADS: " + dlId + " /msg " + dlBot + " xdcc send #" + dlPack);
+                    dlData d = new dlData();
+                    d.dlId = dlId;
+                    d.dlBot = dlBot;
+                    d.dlPack = dlPack;
+                    downloadList.Add(d);
+                }
             }
             if (msg.Contains("AbortDownload"))
             {
