@@ -56,6 +56,8 @@ namespace LittleWeebIRC
             server.Start();
             server.SendGlobalMessage("HELLO LITTLE WEEB");
 
+            HttpServer httpserver = new HttpServer(6010);
+            httpserver.Start();
               
             string webgui = AppDomain.CurrentDomain.BaseDirectory + @"GUI\index.html#socketip=" + GetLocalIPAddress();
             try
@@ -106,6 +108,25 @@ namespace LittleWeebIRC
                 {
                     server.SendGlobalMessage("IrcConnected");
                 }
+            }
+            if (msg.Contains("GetAlreadyDownloadedFiles"))
+            {
+                string[] filePaths = Directory.GetFiles(currentDownloadLocation);
+                string arrayToSend = "ALREADYDOWNLOADED";
+                int a = 0;
+                foreach(string filePath in filePaths)
+                {
+                    string filename = Path.GetFileName(filePath);
+
+                  
+
+                    arrayToSend = arrayToSend + "," + a.ToString() + ":100:0:COMPLETED:" + filename;
+
+                    a++;
+                }
+
+                server.SendGlobalMessage(arrayToSend);
+
             }
             if (msg.Contains("AddToDownloads"))
             {

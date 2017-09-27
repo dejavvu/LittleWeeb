@@ -9,14 +9,14 @@ getBotList();
 
 //define shit that gets shit from nibl
 function getBotList(callback){
-	$.get( "http://api.nibl.co.uk:8080/nibl/bots", function( data ) {
+	$.get( "https://api.nibl.co.uk:8080/nibl/bots", function( data ) {
 	  jsonWithBots = data['content'];
 
 	});
 }
 
 function getPackList(id, name, callback){
-	$.get( "http://api.nibl.co.uk:8080/nibl/packs/" + id, function( data ) {
+	$.get( "https://api.nibl.co.uk:8080/nibl/packs/" + id, function( data ) {
 		jsonPacksInBot = data['content'];
 	  	callback(name, jsonPacksInBot);
 	});
@@ -27,7 +27,7 @@ function searchForAnime(searchQuery, episodeNumber, callback){
 	if(episodeNumber !== undefined){
 		episodeNr = episodeNumber;
 	}
-	$.get( 'http://api.nibl.co.uk:8080/nibl/search?query=' + searchQuery + '&episodeNumber=' + episodeNr, function( data ) {
+	$.get( 'https://api.nibl.co.uk:8080/nibl/search?query=' + searchQuery + '&episodeNumber=' + episodeNr, function( data ) {
 		jsonAnimeSearch = data['content'];
 	  	callback(jsonAnimeSearch);
 	}).fail(function() {
@@ -40,7 +40,7 @@ function searchForAnimePerBot(id, searchQuery, episodeNumber, callback){
 	if(episodeNumber !== undefined){
 		episodeNr = episodeNumber;
 	}
-	$.get( 'http://api.nibl.co.uk:8080/nibl/search/' + id + '?query=' + searchQuery + '&episodeNumber=' + episodeNr, function( data ) {
+	$.get( 'https://api.nibl.co.uk:8080/nibl/search/' + id + '?query=' + searchQuery + '&episodeNumber=' + episodeNr, function( data ) {
 		jsonAnimeSearch = data['content'];
 	  	callback(jsonAnimeSearch);
 	});
@@ -63,7 +63,7 @@ function getBotNamePerID(id){
 }
 
 function getLatestPacks(id, callback){
-	$.get( 'http://api.nibl.co.uk:8080/nibl/latest?size=100', function( data ) {
+	$.get( 'https://api.nibl.co.uk:8080/nibl/latest?size=100', function( data ) {
 		jsonLatestPacks = data['content'];
 	  	callback(id, jsonLatestPacks);
 	});
@@ -77,16 +77,16 @@ function getCurrentlyAiring(callback){
 	var currentlyAiring = [];
 	var currentTime = new Date();
 
-	$.get( 'http://api.nibl.co.uk:8080/anilist/series/season?year=' + currentTime.getFullYear() + '&season=winter', function( data ) {
+	$.get( 'https://api.nibl.co.uk:8080/anilist/series/season?year=' + currentTime.getFullYear() + '&season=winter', function( data ) {
 		winter = data['content'];		
 
-		$.get( 'http://api.nibl.co.uk:8080/anilist/series/season?year=' + currentTime.getFullYear() + '&season=spring', function( data ) {
+		$.get( 'https://api.nibl.co.uk:8080/anilist/series/season?year=' + currentTime.getFullYear() + '&season=spring', function( data ) {
 			spring = data['content'];
 
-			$.get( 'http://api.nibl.co.uk:8080/anilist/series/season?year=' + currentTime.getFullYear() + '&season=summer', function( data ) {
+			$.get( 'https://api.nibl.co.uk:8080/anilist/series/season?year=' + currentTime.getFullYear() + '&season=summer', function( data ) {
 				summer = data['content'];
 
-				$.get( 'http://api.nibl.co.uk:8080/anilist/series/season?year=' + currentTime.getFullYear() + '&season=fall', function( data ) {
+				$.get( 'https://api.nibl.co.uk:8080/anilist/series/season?year=' + currentTime.getFullYear() + '&season=fall', function( data ) {
 					fall = data['content'];
 
 
